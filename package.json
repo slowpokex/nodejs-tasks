@@ -1,0 +1,26 @@
+{
+  "name": "node_tasks_main",
+  "version": "1.0.0",
+  "main": "init.js",
+  "scripts": {
+    "start": "babel-node init.js",
+    "watch": "nodemon init.js --exec babel-node",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mikita Isakau <harley26.gold@gmail.com>",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "production": "0.0.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "nodemon": "^1.12.0"
+  }
+}
