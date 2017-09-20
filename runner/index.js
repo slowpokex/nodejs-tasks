@@ -1,7 +1,7 @@
 'use strict'
-import config from  '../config';
-import models from '../model';
+import config from '../config';
+import { User, Product } from  '../model';
 
 console.log(config.name);
-const john = new models.User();
-const coconut = new models.Product();
+const john = new User();
+const coconut = new Product();

@@ -1,7 +1,5 @@
-class User {
-    constructor(name) {
+export default class User {
+    constructor() {
         console.log('User module');
     }
 }
-
-export default User;
