@@ -5,6 +5,10 @@ import { EventEmitter } from 'events';
 
 const readDirAsync = promisify(fs.readdir);
 
+/**
+ * @author Mikita Isakau
+ * @class DirWatcher
+ */
 export default class DirWatcher {
     constructor(emitter) {
         if (!emitter || !(emitter instanceof EventEmitter)) {
@@ -21,7 +25,7 @@ export default class DirWatcher {
      */
     watch(path, delay = 1000) {
         if (!path) {
-            console.log(`The path not specified!`);
+            console.log(`The path is not specified!`);
             return;
         }
         if (this.pathsCache.includes(path)) {
@@ -31,13 +35,14 @@ export default class DirWatcher {
         readDirAsync(path)
             .then((files) => {
                 lodash.forEach(files, (item) => {
-                    const FILE = path + '/' + item;
+                    const FILE = `${path}/${item}`;
                     fs.watchFile(FILE, 
                         { interval: delay }, 
                         () => {
                             console.log(`The file ${FILE} has been changed!`);
                             this.emitter.emit('dir-watcher:changed', { file: FILE });
                         });
+                    this.emitter.emit('dir-watcher:register', { file: FILE });
                 })
             });
         this.pathsCache.push(path);
@@ -50,11 +55,11 @@ export default class DirWatcher {
      */
     unwatch(path) {
         if (!path) {
-            console.log(`The path not specified!`);
+            console.log(`The path isn't specified!`);
             return;
         }
         if (!this.pathsCache.includes(path)) {
-            console.log(`The path ${path} not watching!`);
+            console.log(`The path ${path} isn't watching!`);
             return;
         }
 
@@ -63,10 +68,11 @@ export default class DirWatcher {
                 lodash.forEach(files, (item) => {
                     const FILE = path + '/' + item;
                     fs.unwatchFile(FILE);
+                    this.emitter.emit('dir-watcher:unregister', { file: FILE });
                 });
             });
         this.pathsCache.filter((item) => (item !== path));
-        console.log(`The watching of ${path} has been stopped!`);
+        console.log(`The watching for ${path} has been stopped!`);
     }
 }
  
