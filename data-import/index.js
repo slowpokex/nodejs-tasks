@@ -1,2 +1,4 @@
-export { default as DirWatcher } from './dir-watcher';
-export { default as Importer } from './importer';
+import  DirWatcher from './dir-watcher';
+import Importer from './importer';
+
+export { DirWatcher, Importer };

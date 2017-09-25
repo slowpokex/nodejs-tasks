@@ -12,11 +12,8 @@ const readDirAsync = promisify(fs.readdir);
  * @author Mikita Isakau
  */
 export default class DirWatcher {
-  constructor(emitter) {
-    if (!emitter || !(emitter instanceof EventEmitter)) {
-      throw new Error('Emitter didn\'t register in DirWatcher');
-    }
-    this.emitter = emitter;
+  constructor() {
+    this.emitter = new EventEmitter();
     this.pathsCache = [];
   }
 

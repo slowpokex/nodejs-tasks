@@ -2,10 +2,10 @@ import fs from 'fs';
 import parse from 'csv-parse';
 import { promisify } from 'util';
 import { EventEmitter } from 'events';
+import DirWatcher from './dir-watcher';
 
 const readFileAsync = promisify(fs.readFile);
 const asyncParser = promisify(parse);
-// const asyncWriteFile = promisify(fs.writeFile);
 
 /**
  * @class Importer
@@ -59,11 +59,11 @@ export default class Importer {
     this.dataMap.delete(event.file);
   }
 
-  constructor(emitter) {
-    if (!emitter || !(emitter instanceof EventEmitter)) {
-      throw new Error('Emitter didn\'t register in Importer');
+  constructor(dirWatcher) {
+    if (!dirWatcher || !(dirWatcher instanceof DirWatcher)) {
+      throw new Error('DirWatcher didn\'t register in Importer');
     }
-    this.emitter = emitter;
+    this.emitter = dirWatcher.emitter;
     this.dataMap = new Map();
 
     this.register = this.register.bind(this);
@@ -74,14 +74,6 @@ export default class Importer {
     this.emitter.on('dir-watcher:changed', this.change);
     this.emitter.on('dir-watcher:unregister', this.unregister);
   }
-
-  // TODO: need for testing
-  // show() {
-  //   const map = this.dataMap.entries();
-  //   for (const [key, value] of map) {
-  //     console.log(`${key} : length is ${value.length}`);
-  //   }
-  // }
 
   /**
    * Asyncronous getting imported data
@@ -98,9 +90,6 @@ export default class Importer {
    * @return {Object} with imported data 
    */
   importSync(path) {
-    // if (!path || this.dataMap.has(path)) {
-    //   console.error(`${path} : Wrong file name or file not found!`);
-    // }
     return this.dataMap.get(path);
   }
 
