@@ -1,20 +1,19 @@
-import { EventEmitter } from 'events';
 import { DirWatcher, Importer } from '../data-import';
 
 const dirWatcher = new DirWatcher();
 const importer = new Importer(dirWatcher);
 
-const FILE = './data/MOCK_DATA.csv';
+const FILE = './src/data/MOCK_DATA.csv';
 
 const WATCH_INTERVAL = 5000;
 const IMPORT_INTERVAL = 2500;
 const WATCH_LIMIT = 60000;
 
-dirWatcher.watch('./data', WATCH_INTERVAL);
+dirWatcher.watch('./src/data', WATCH_INTERVAL);
 
 const importingSync = () => {
   try {
-    const data = importer.importSync('./data/MOCK_DATA.csv');
+    const data = importer.importSync(FILE);
     console.log(`Sync load import:  ${data.length} values in file`);
   } catch (error) {
     console.error(`Has been error when reading file - ${error}`);
