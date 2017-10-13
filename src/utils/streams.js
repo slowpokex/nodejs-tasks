@@ -1,6 +1,6 @@
-import { createReadStream, createWriteStream, readdir } from 'fs';
-import { createServer } from 'http';
+import fs, { createReadStream, createWriteStream, readdir } from 'fs';
 import { promisify } from 'util';
+import { O_APPEND, O_CREAT } from 'constants';
 
 import minimist from 'minimist';
 import request from 'request';
@@ -8,9 +8,8 @@ import through from 'through2';
 import lodash from 'lodash';
 import split from 'split2';
 
-const readDirAsync = promisify(readdir);
+const readdirAsync = promisify(readdir);
 
-const printHelpMessage = () => createWriteStream('').pipe(process.stderr);
 const getExtension = file =>
   file.slice((Math.max(0, file.lastIndexOf('.')) || Infinity) + 1);
 const getFileName = file => file.slice(0, file.lastIndexOf('.'));
@@ -53,6 +52,12 @@ const toUpperCase = () => through((chunk, enc, cb) =>
 const inputOutput = file => createReadStream(file)
   .pipe(process.stdout);
 
+const printHelpMessage = (err) => {
+  console.error(err.message);
+  return createReadStream(`${__dirname}/helpMessage.txt`)
+    .pipe(process.stderr);
+};
+
 function upperCaseOutput() {
   return process.stdin
     .pipe(toUpperCase())
@@ -74,23 +79,34 @@ function transformFromFile(filename, intoFile) {
     .pipe(writeStream);
 }
 
-function httpClient(argv) {
-  const url = argv.url || argv.u;
-  return request(url)
-    .pipe(process.stdout);
-}
-
 function cssBundler(path) {
-  const filename = `${path}/bundle.css`;
+  const bundlePath = `${path}/bundle.css`;
+  const getWriter = () => createWriteStream(bundlePath, { flags: O_APPEND });
+
+  const handleCss = css => new Promise((res, rej) => {
+    const cssReader = createReadStream(css);
+    cssReader.pipe(getWriter());
+
+    cssReader.on('end', res);
+    cssReader.on('error', rej);
+  });
+
+  fs.openSync(bundlePath, O_CREAT);
+
   const addCssStream =
     request('https://www.epam.com/etc/clientlibs/foundation/main.min.fc69c13add6eae57cd247a91c7e26a15.css');
 
-  readdir(path)
-    .then((data) => {
-      lodash.forEach(data, (css) => {
-        console.log(css);
-      });
-    });
+  readdirAsync(path)
+    .then((files) => {
+      const promises = files
+        .filter(file => getExtension(file) === 'css')
+        .map(css => `${path}/${css}`)
+        .map(handleCss);
+
+      return Promise.all(promises);
+    }).then(() => {
+      addCssStream.pipe(getWriter());
+    }).catch(err => printHelpMessage(err));
 }
 
 function handleCommandLine(argv) {
