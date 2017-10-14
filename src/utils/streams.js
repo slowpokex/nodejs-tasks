@@ -1,4 +1,4 @@
-import fs, { createReadStream, createWriteStream, readdir } from 'fs';
+import fs, { createReadStream, createWriteStream, readdir, open } from 'fs';
 import { promisify } from 'util';
 import { O_APPEND, O_CREAT } from 'constants';
 
@@ -9,6 +9,7 @@ import lodash from 'lodash';
 import split from 'split2';
 
 const readdirAsync = promisify(readdir);
+const openAsync = promisify(open);
 
 const getExtension = file =>
   file.slice((Math.max(0, file.lastIndexOf('.')) || Infinity) + 1);
@@ -79,37 +80,52 @@ function transformFromFile(filename, intoFile) {
     .pipe(writeStream);
 }
 
-function cssBundler(path) {
+async function cssBundler(path) {
   const bundlePath = `${path}/bundle.css`;
   const getWriter = () => createWriteStream(bundlePath, { flags: O_APPEND });
 
   const handleCss = css => new Promise((res, rej) => {
     const cssReader = createReadStream(css);
-    cssReader.pipe(getWriter());
+    const writer = getWriter();
+    cssReader.pipe(writer);
 
-    cssReader.on('end', res);
-    cssReader.on('error', rej);
+    cssReader.on('end', () => {
+      cssReader.close();
+      writer.close();
+      res();
+    });
+    cssReader.on('error', () => {
+      cssReader.close();
+      writer.close();
+      rej();
+    });
   });
 
-  fs.openSync(bundlePath, O_CREAT);
-
-  const addCssStream =
-    request('https://www.epam.com/etc/clientlibs/foundation/main.min.fc69c13add6eae57cd247a91c7e26a15.css');
-
-  readdirAsync(path)
+  return await openAsync(bundlePath, 'w+')
+    .then(() => readdirAsync(path))  
     .then((files) => {
       const promises = files
         .filter(file => getExtension(file) === 'css')
         .map(css => `${path}/${css}`)
         .map(handleCss);
 
-      return Promise.all(promises);
+      let chainedPromises = lodash.head(promises);
+      promises
+        .slice(1)
+        .forEach((promise) => {
+          chainedPromises = chainedPromises.then(promise);
+        });
+      return chainedPromises;
     }).then(() => {
-      addCssStream.pipe(getWriter());
-    }).catch(err => printHelpMessage(err));
+      request('https://www.epam.com/etc/clientlibs/foundation/main.min.fc69c13add6eae57cd247a91c7e26a15.css')
+        .pipe(getWriter());
+    }).then(() => {
+      console.log('The bundle has beed built!');
+    })
+    .catch(err => printHelpMessage(err));
 }
 
-function handleCommandLine(argv) {
+async function handleCommandLine(argv) {
   if (argv.help || argv.h) {
     return printHelpMessage();
   }
@@ -129,7 +145,7 @@ function handleCommandLine(argv) {
       case 'csv2json-file':
         return transformFromFile(filename, true);
       case 'css-bundler':
-        return cssBundler(path);
+        return await cssBundler(path);
       default:
         throw new Error(action);
     }

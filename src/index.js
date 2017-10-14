@@ -1,4 +1,5 @@
 import 'babel-register';
+import 'babel-polyfill';
 
 // Hometask 1: NodeJS Modules. NPM
 // import './hometasks/modules';
