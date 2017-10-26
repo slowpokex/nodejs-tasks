@@ -130,3 +130,6 @@ fabric.properties
 
 # End of https://www.gitignore.io/api/node,bower,webstorm
 package-lock.json
+
+# My rules
+dist/

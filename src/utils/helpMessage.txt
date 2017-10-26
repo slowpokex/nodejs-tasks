@@ -1,0 +1,21 @@
+Help message:
+
+Run this file with parameters:
+
+--action=<action> [ --file=<filename> ] [ --path=<path> ]
+
+Allowed actions:
+
+    --action=io-upper (-a io-upper) - transform input value to uppercase;
+
+    --action=file-io (-a file-io) - Output data from file to console 
+(use with --file flag)
+
+    --action=csv2json-io (-a csv2json-io) - Translate csv-file to JSON data and output to console 
+(use with --file flag)
+
+    --action=csv2json-file (-a csv2json-file) - Translate csv-file to JSON data and output to 
+writable file (use with --file flag)
+
+    --action=css-bundler (-a io-upper) - Grab all css-files from directory and and combines 
+  all the files into one file bundle.css (use with --path flag)

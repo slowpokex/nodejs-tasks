@@ -1,7 +1,6 @@
 import fs from 'fs';
 import parse from 'csv-parse';
 import { promisify } from 'util';
-import { EventEmitter } from 'events';
 import DirWatcher from './dir-watcher';
 
 const readFileAsync = promisify(fs.readFile);

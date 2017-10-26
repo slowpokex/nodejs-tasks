@@ -20,7 +20,8 @@ export default class DirWatcher {
   /**
    * Watching the files for a specific directory
    * @param {string} path - The specific path to the folder
-   * @param {number} delay (default value is 1s) - The interval between updates of the observer
+   * @param {number} delay (default value is 1s) - The 
+   * interval between updates of the observer
    */
   watch(path, delay = 1000) {
     if (!path) {
