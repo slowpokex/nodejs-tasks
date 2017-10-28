@@ -9,4 +9,8 @@ import 'babel-polyfill';
 
 // Hometask 3: Streams
 // In this cases, compile to dist directory and run 'node dist' with parameters
-import './utils/streams';
+// import './utils/streams';
+
+// Hometask 4: Http Servers & Middleware
+// import './http-servers';
+import './express-app';
