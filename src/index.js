@@ -1,5 +1,7 @@
 import 'babel-register';
 import 'babel-polyfill';
+import app from './app';
+import config from './config/express-config';
 
 // Hometask 1: NodeJS Modules. NPM
 // import './hometasks/modules';
@@ -13,4 +15,5 @@ import 'babel-polyfill';
 
 // Hometask 4: Http Servers & Middleware
 // import './http-servers';
-import './express-app';
+app.listen(config.server.port, () => console.log(`App listening on port ${config.server.port}!`));
+

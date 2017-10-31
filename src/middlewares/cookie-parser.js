@@ -1,10 +1,7 @@
 import lodash from 'lodash';
 
 export default function (req, res, next) {
-  const cookies = req.headers.cookie;
-  if (!cookies) {
-    next();
-  }
+  const cookies = req.headers.cookie || '';
   res.parsedCookies = {};
   const entries = lodash.split(cookies, ';');
 
