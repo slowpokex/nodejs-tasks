@@ -18,7 +18,6 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babel-register": "^6.26.0",
-    "bluebird": "^3.5.1",
     "csv-parse": "^1.2.3",
     "express": "^4.16.2",
     "helmet": "^3.9.0",

@@ -14,8 +14,8 @@ router
     });
   });
 
-router.use('/user', userRouter);
-router.use('/product', productRouter);
-router.use('/review', reviewRouter);
+router.use('/users', userRouter);
+router.use('/products', productRouter);
+router.use('/reviews', reviewRouter);
 
 export default router;

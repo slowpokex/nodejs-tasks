@@ -12,4 +12,7 @@ router.route('/:id')
   .get((...args) => controller.findById(...args))
   .delete((...args) => controller.remove(...args));
 
+router.route('/:id/reviews')
+  .get((...args) => controller.getAllProducts(...args));
+
 export default router;

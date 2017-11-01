@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import path from 'path';
-import bluebird from 'bluebird';
 
 import config from './config/express-config';
 import cookieParser from './middlewares/cookie-parser';
@@ -14,7 +13,7 @@ import router from './routes';
 
 const app = express();
 
-mongoose.Promise = bluebird;
+mongoose.Promise = Promise;
 mongoose.connect(config.mongo.url);
 
 app.use(accessControlHeaders);
