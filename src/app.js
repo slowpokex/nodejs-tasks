@@ -6,6 +6,7 @@ import db from './db';
 import cookieParser from './middlewares/cookie-parser';
 import queryParser from './middlewares/query-parser';
 import securityWrapper from './security';
+import checkToken from './middlewares/security/check-token';
 
 // import checkToken from './middlewares/security/check-token';
 import router from './routes';
@@ -21,6 +22,6 @@ app.use(morgan('tiny'));
 securityWrapper(app);
 
 app.use('/static', express.static(path.join(__dirname, 'static')));
-app.use('/api', router);
+app.use('/api', checkToken, router);
 
 export default app;

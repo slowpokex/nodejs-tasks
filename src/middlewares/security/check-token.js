@@ -15,7 +15,7 @@ export default function checkToken(req, res, next) {
     return res.status(403).send(errorMessage);
   }
   return verifyAsync(token, config.server.security.secret)
-    .then(decoded => next(decoded))
+    .then(() => next())
     .catch(err =>
       res.json({ success: false, message: 'Failed to authenticate token.', error: err }));
 }
