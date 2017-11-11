@@ -5,6 +5,9 @@ import session from 'express-session';
 
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
+import { Strategy as TwitterStrategy } from 'passport-twitter';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 
 import User from './models/user/schema';
 import accessControlHeaders from './middlewares/security/access-control-headers';
@@ -30,7 +33,6 @@ const basicSetup = (app) => {
 
 export function setupBasicSecurity(app) {
   basicSetup(app);
-
   // Auth
   app.post('/auth', function (req, res) {
     User.findOne({ id: req.body.id })
@@ -47,6 +49,78 @@ export function setupBasicSecurity(app) {
           error: err,
         }));
   });
+}
+
+function initFacebookAuth(pass) {
+  pass.use(new FacebookStrategy({
+    clientID: config.server.security.auth.facebook.clientID,
+    clientSecret: config.server.security.auth.facebook.clientSecret,
+    callbackURL: config.server.security.auth.facebook.callbackUrl,
+  }, (token, refreshToken, profile, done) => {
+    process.nextTick(() => {
+      User.findOne({ id: profile.id })
+        .then((user) => {
+          if (user) {
+            done(null, user);
+          }
+          return User.create({
+            id: profile.id,
+            displayName: profile.displayName,
+            password: token,
+          });
+        })
+        .then(newUser => done(null, newUser))
+        .catch(done);
+    });
+  }));
+}
+
+function initTwitterAuth(pass) {
+  pass.use(new TwitterStrategy({
+    consumerKey: config.server.security.auth.twitter.consumerKey,
+    consumerSecret: config.server.security.auth.twitter.consumerSecret,
+    callbackURL: config.server.security.auth.twitter.callbackUrl,
+  }, (token, refreshToken, profile, done) => {
+    process.nextTick(() => {
+      User.findOne({ id: profile.id })
+        .then((user) => {
+          if (user) {
+            done(null, user);
+          }
+          return User.create({
+            id: profile.id,
+            displayName: profile.displayName,
+            password: token,
+          });
+        })
+        .then(newUser => done(null, newUser))
+        .catch(done);
+    });
+  }));
+}
+
+function initGoogleAuth(pass) {
+  pass.use(new GoogleStrategy({
+    clientID: config.server.security.auth.google.clientID,
+    clientSecret: config.server.security.auth.google.clientSecret,
+    callbackURL: config.server.security.auth.google.callbackUrl,
+  }, (token, refreshToken, profile, done) => {
+    process.nextTick(() => {
+      User.findOne({ id: profile.id })
+        .then((user) => {
+          if (user) {
+            done(null, user);
+          }
+          return User.create({
+            id: profile.id,
+            displayName: profile.displayName,
+            password: token,
+          });
+        })
+        .then(newUser => done(null, newUser))
+        .catch(done);
+    });
+  }));
 }
 
 export function setupPassportSecurity(app) {
@@ -76,13 +150,38 @@ export function setupPassportSecurity(app) {
       .catch(done);
   });
 
+  initFacebookAuth(passport);
+  initTwitterAuth(passport);
+  initGoogleAuth(passport);
+
   app.use(passport.initialize());
   app.use(passport.session());
 
-  app.post('/auth',
+  app.post('/auth/local',
     passport.authenticate('local', {
-      successRedirect: '/api',
-      failureRedirect: '/login',
+      successRedirect: '/v2/api',
+      failureRedirect: '/auth/local',
       failureFlash: true,
     }));
+
+  app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
+  app.get('/auth/facebook/callback', passport.authenticate('facebook',
+    { successRedirect: '/v2/api', failureRedirect: '/login' }));
+
+  app.get('/auth/twitter', passport.authenticate('twitter'));
+  app.get('/auth/twitter/callback', passport.authenticate('twitter',
+    { successRedirect: '/v2/api', failureRedirect: '/login' }));
+
+  app.get('/auth/google',
+    passport.authenticate('google', { scope: ['profile'] }));
+
+  app.get('/auth/google/callback',
+    passport.authenticate('google', {
+      successRedirect: '/v2/api',
+      failureRedirect: '/login' }));
+
+  app.get('/logout', (req, res) => {
+    req.logout();
+    res.redirect('/');
+  });
 }

@@ -12,24 +12,28 @@ const SALT_WORK_FACTOR = 10;
 const userSchema = new mongoose.Schema({
   isActive: {
     type: Boolean,
-    required: true,
+    required: false,
     default: false,
   },
   title: {
     type: String,
     default: 'Employee',
   },
+  displayName: {
+    type: String,
+    default: 'Anonymous',
+  },
   lastName: {
     type: String,
-    required: true,
+    default: 'Anonymous',
   },
   firstName: {
     type: String,
-    required: true,
+    default: 'Anonymous',
   },
   password: {
     type: String,
-    required: true,
+    minlength: 6,
   },
   id: {
     type: String,

@@ -3,14 +3,12 @@ import morgan from 'morgan';
 import path from 'path';
 
 import db from './db';
-import { setupPassportSecurity } from './security';
+import { setupBasicSecurity, setupPassportSecurity } from './security';
 
-// import checkToken from './middlewares/security/check-token';
+import checkToken from './middlewares/security/check-token';
 import cookieParser from './middlewares/cookie-parser';
 import queryParser from './middlewares/query-parser';
 import mustAuth from './middlewares/security/must-auth';
-
-// import checkToken from './middlewares/security/check-token';
 import router from './routes';
 
 const app = express();
@@ -21,10 +19,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('tiny'));
 
-// setupSecurity(app); // and add 'checkToken' for verifying session
+setupBasicSecurity(app); // and add 'checkToken' for verifying session
 setupPassportSecurity(app);
 
 app.use('/static', express.static(path.join(__dirname, 'static')));
-app.use('/api', mustAuth, router);
+
+app.use('/v1/api', checkToken, router);
+app.use('/v2/api', mustAuth, router);
 
 export default app;
