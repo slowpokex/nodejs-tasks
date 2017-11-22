@@ -1,29 +1,30 @@
 import express from 'express';
 import morgan from 'morgan';
-import helmet from 'helmet';
 import path from 'path';
 
 import db from './db';
+import { setupBasicSecurity, setupPassportSecurity } from './security';
+
+import checkToken from './middlewares/security/check-token';
 import cookieParser from './middlewares/cookie-parser';
 import queryParser from './middlewares/query-parser';
-import accessControlHeaders from './middlewares/security/access-control-headers';
-
+import mustAuth from './middlewares/security/must-auth';
 import router from './routes';
 
 const app = express();
 
-app.use(accessControlHeaders);
-app.use(helmet());
 app.use(cookieParser);
 app.use(queryParser);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('tiny'));
 
-// Auth
-// app.post('/auth', );
+setupBasicSecurity(app); // and add 'checkToken' for verifying session
+setupPassportSecurity(app);
 
 app.use('/static', express.static(path.join(__dirname, 'static')));
-app.use('/api', router);
+
+app.use('/v1/api', checkToken, router);
+app.use('/v2/api', mustAuth, router);
 
 export default app;
