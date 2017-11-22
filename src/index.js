@@ -1,7 +1,7 @@
 import 'babel-register';
 import 'babel-polyfill';
 import app from './app';
-import config from './config/express-config';
+import config from './config';
 
 // Hometask 1: NodeJS Modules. NPM
 // import './hometasks/modules';

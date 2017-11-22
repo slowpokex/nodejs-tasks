@@ -11,7 +11,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 
 import User from './models/user/schema';
 import accessControlHeaders from './middlewares/security/access-control-headers';
-import config from './config/express-config';
+import config from './config';
 
 const checkUser = (password, userFromDb) => new Promise((resolve, reject) => {
   const wrappedUser = new User(userFromDb);
@@ -165,8 +165,7 @@ export function setupPassportSecurity(app) {
     }));
 
   app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
-  app.get('/auth/facebook/callback', passport.authenticate('facebook',
-    { successRedirect: '/v2/api', failureRedirect: '/login' }));
+
 
   app.get('/auth/twitter', passport.authenticate('twitter'));
   app.get('/auth/twitter/callback', passport.authenticate('twitter',
