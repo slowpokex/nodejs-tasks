@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
-import userRouter from './models/user/router';
-import productRouter from './models/product/router';
-import reviewRouter from './models/review/router';
+
+import userRouter from './models/orm/routers/user';
+import productRouter from './models/orm/routers/product';
 
 const router = new Router();
 
@@ -16,6 +16,5 @@ router
 
 router.use('/users', userRouter);
 router.use('/products', productRouter);
-router.use('/reviews', reviewRouter);
 
 export default router;
