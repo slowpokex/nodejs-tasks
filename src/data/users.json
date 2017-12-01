@@ -1,0 +1,83 @@
+[
+  {
+    "_id": "e0a574e1-6e87-4baf-b942-f984d9cd0635",
+    "isActive": true,
+    "title": "Developer",
+    "lastName": "Gay",
+    "firstName": "Glenna",
+    "password": "hello",
+    "products": ["meat123"]
+  },
+  {
+    "_id": "46ae661f-99a9-4838-82cc-d76165f00d1a",
+    "isActive": false,
+    "title": "Developer",
+    "lastName": "Jenkins",
+    "firstName": "Morton",
+    "password": "docker",
+    "products": ["meat123", "milk123"]
+  },
+  {
+    "_id": "d879a4a3-89e5-45f0-ab68-4944fceb3d62",
+    "isActive": false,
+    "title": "QA",
+    "lastName": "Hurley",
+    "firstName": "Ilene",
+    "password": "rickeyandmorty",
+    "products": ["lenovo12558", "milk123"]
+  },
+  {
+    "_id": "f7f2c8a3-1978-405e-97ea-1d917888685c",
+    "isActive": true,
+    "title": "Office Manager",
+    "lastName": "Mullins",
+    "firstName": "Gamble",
+    "password": "bumblbee",
+    "products": ["lenovo12558", "sven145"]
+  },
+  {
+    "_id": "0c65ed67-9ecf-4d1d-a221-5e1473767237",
+    "isActive": false,
+    "title": "Senior Developer",
+    "lastName": "Hopper",
+    "firstName": "Lorena",
+    "password": "password",
+    "products": ["lenovo12558", "sven145", "milk123"]
+  },
+  {
+    "_id": "6501ef69-4dc3-4e35-a224-e6c757d12bfc",
+    "isActive": false,
+    "title": "Director",
+    "lastName": "Mills",
+    "firstName": "Carly",
+    "password": "jenkins",
+    "products": ["imacapple778", "sven145", "imacapple778"]
+  },
+  {
+    "_id": "39302125-bc0e-4fae-901c-bd03f856d017",
+    "isActive": false,
+    "title": "QA",
+    "lastName": "Mcbride",
+    "firstName": "Ora",
+    "password": "shipleader",
+    "products": ["imacapple778", "imacapple778"]
+  },
+  {
+    "_id": "5a1ea4c825808e1d185e20ff",
+    "isActive": true,
+    "title": "QA",
+    "lastName": "Benton",
+    "firstName": "Stokes",
+    "password": "kitchen",
+    "products": ["sven145", "apple12"]
+  },
+  {
+    "_id": "5a1ea4c825808e1d185e20fe",
+    "isActive": true,
+    "title": "Senior Developer",
+    "lastName": "Buchanan",
+    "firstName": "Pansy",
+    "password": "nodejsprogrammer",
+    "products": ["apple12"]
+  }
+]

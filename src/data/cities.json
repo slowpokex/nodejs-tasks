@@ -1,0 +1,62 @@
+[
+  {
+    "_id": "1",
+    "name" : "Gomel",
+    "country": "Belarus",
+    "capital": false,
+    "location" : {
+      "long": 52.142,
+      "lat": 147.58
+    }
+  },
+  {
+    "_id": "2",
+    "name" : "Minsk",
+    "country": "Belarus",
+    "capital": true,
+    "location" : {
+      "long": 12.142,
+      "lat": 47.58
+    }
+  },
+  {
+    "_id": "3",
+    "name" : "Moskow",
+    "country": "Russia",
+    "capital": true,
+    "location" : {
+      "long": 72.142,
+      "lat": 47.58
+    }
+  },
+  {
+    "_id": "4",
+    "name" : "Beiging",
+    "country": "China",
+    "capital": true,
+    "location" : {
+      "long": 152.12,
+      "lat": 17.58
+    }
+  },
+  {
+    "_id": "5",
+    "name" : "Kyoto",
+    "country": "Japan",
+    "capital": false,
+    "location" : {
+      "long": 152.12,
+      "lat": 17.58
+    }
+  },
+  {
+    "_id": "6",
+    "name" : "Dresden",
+    "country": "Germany",
+    "capital": false,
+    "location" : {
+      "long": 2.142,
+      "lat": 147.58
+    }
+  }
+]

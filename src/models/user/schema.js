@@ -10,6 +10,10 @@ const compareAsync = promisify(compare);
 const SALT_WORK_FACTOR = 10;
 
 const userSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    required: true,
+  },
   isActive: {
     type: Boolean,
     required: false,
@@ -33,21 +37,18 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    minlength: 6,
-  },
-  id: {
-    type: String,
-    required: true,
-    unique: true,
+    minlength: 4,
   },
   products: [{
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: 'Product',
   }],
+  lastModifiedDate: Date,
 });
 
 userSchema.pre('save', function (next) {
   const user = this;
+  user.lastModifiedDate = new Date();
   if (!user.isModified('password')) {
     return next();
   }

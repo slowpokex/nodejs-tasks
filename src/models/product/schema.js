@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 import '../review/schema';
 
 const productSchema = new mongoose.Schema({
+  _id: {
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
     required: true,
@@ -11,9 +15,15 @@ const productSchema = new mongoose.Schema({
     required: true,
   },
   reviews: [{
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: 'Review',
   }],
+  lastModifiedDate: Date,
+});
+
+productSchema.pre('save', function (next) {
+  this.lastModifiedDate = new Date();
+  next();
 });
 
 export default mongoose.model('Product', productSchema);
