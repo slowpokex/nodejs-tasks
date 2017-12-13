@@ -11,13 +11,13 @@ export default class Controller {
 
   find(req, res, next) {
     this.facade.find(req.query)
-      .then(collection => res.status(200).json(collection))
+      .then(collection => res.json(collection))
       .catch(err => next(err));
   }
 
   findOne(req, res, next) {
     this.facade.findOne(req.query)
-      .then(doc => res.status(200).json(doc))
+      .then(doc => res.json(doc))
       .catch(err => next(err));
   }
 
@@ -25,7 +25,7 @@ export default class Controller {
     this.facade.findById(req.params.id)
       .then((doc) => {
         if (!doc) res.sendStatus(404);
-        res.status(200).json(doc);
+        res.json(doc);
       })
       .catch(err => next(err));
   }
@@ -34,12 +34,12 @@ export default class Controller {
     this.facade.update({ _id: req.params.id }, req.body)
       .then((results) => {
         if (results.n < 1) {
-          res.sendStatus(404);
+          return this.create(req.body);
         }
         if (results.nModified < 1) {
-          res.sendStatus(304);
+          return res.sendStatus(304);
         }
-        res.sendStatus(200);
+        return res.json(results);
       })
       .catch(err => next(err));
   }

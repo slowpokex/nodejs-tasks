@@ -1,0 +1,32 @@
+[
+  {
+    "_id": "review1",
+    "head": "Good",
+    "comment": "I'm pleasure!"
+  },
+  {
+    "_id": "review2",
+    "head": "Perfect",
+    "comment": "Brilliant!"
+  },
+  {
+    "_id": "review3",
+    "head": "Fine",
+    "comment": "Need to buy!"
+  },
+  {
+    "_id": "review4",
+    "head": "Baaad!",
+    "comment": "It's doesnt work!"
+  },
+  {
+    "_id": "review5",
+    "head": "Ahahah",
+    "comment": "Fiiine!"
+  },
+  {
+    "_id": "review6",
+    "head": "Coool",
+    "comment": "I'm pleasure!"
+  }
+]

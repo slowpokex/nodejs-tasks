@@ -1,3 +1,5 @@
+import lodash from 'lodash';
+
 export default class Facade {
   constructor(Schema) {
     this.Schema = Schema;
@@ -6,6 +8,16 @@ export default class Facade {
   create(body) {
     const schema = new this.Schema(body);
     return schema.save();
+  }
+
+
+  createIfEmpty(data) {
+    return this.find({})
+      .then(result => (lodash.isEmpty(result) ? this.insertMany(data) : null));
+  }
+
+  insertMany(bodies) {
+    return Promise.all(lodash.map(bodies, body => this.create(body)));
   }
 
   find(...args) {

@@ -2,7 +2,10 @@ import express from 'express';
 import morgan from 'morgan';
 import path from 'path';
 
-import db from './db';
+// Run database
+import './db';
+
+// Run security endpoints
 import { setupBasicSecurity, setupPassportSecurity } from './security';
 
 import checkToken from './middlewares/security/check-token';
@@ -24,7 +27,7 @@ setupPassportSecurity(app);
 
 app.use('/static', express.static(path.join(__dirname, 'static')));
 
-app.use('/v1/api', checkToken, router);
+app.use('/api', checkToken, router);
 app.use('/v2/api', mustAuth, router);
 
 export default app;

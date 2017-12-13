@@ -1,0 +1,38 @@
+[
+  {
+    "_id": "meat123",
+    "name": "Beef Meat",
+    "type": "Food",
+    "reviews": ["review3", "review2"]
+  },
+  {
+    "_id": "milk123",
+    "name": "Fresh Milk",
+    "type": "Food",
+    "reviews": ["review3", "review4"]
+  },
+  {
+    "_id": "apple12",
+    "name": "Apple",
+    "type": "Food",
+    "reviews": ["review1", "review2"]
+  },
+  {
+    "_id": "imacapple778",
+    "name": "Apple Mac",
+    "type": "Equipment",
+    "reviews": ["review1", "review6"]
+  },
+  {
+    "_id": "lenovo12558",
+    "name": "Lenovo Vibe K5",
+    "type": "Phone",
+    "reviews": ["review5", "review2"]
+  },
+  {
+    "_id": "sven145",
+    "name": "Sven Mouse",
+    "type": "Equipment",
+    "reviews": ["review3", "review6"]
+  }
+]

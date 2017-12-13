@@ -1,7 +1,10 @@
 import 'babel-register';
 import 'babel-polyfill';
+
 import app from './app';
 import config from './config/express-config';
+
+const PORT = config.server.port;
 
 // Hometask 1: NodeJS Modules. NPM
 // import './hometasks/modules';
@@ -13,7 +16,7 @@ import config from './config/express-config';
 // In this cases, compile to dist directory and run 'node dist' with parameters
 // import './utils/streams';
 
-// Hometask 4: Http Servers & Middleware
+// Hometask 4: Http Servers & Middleware && Hometask 7: Simple Mongo Server
 // import './http-servers';
-app.listen(config.server.port, () => console.log(`App listening on port ${config.server.port}!`));
+app.listen(PORT, () => console.log(`App listening on port ${PORT}!`));
 

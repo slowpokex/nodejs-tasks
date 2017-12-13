@@ -1,5 +1,6 @@
 import Facade from '../../bin/facade';
 import productSchema from './schema';
+import productMockData from '../../data/products';
 
 class ProductFacade extends Facade {
   create(body) {
@@ -43,4 +44,9 @@ class ProductFacade extends Facade {
   }
 }
 
-export default new ProductFacade(productSchema);
+const productFacade = new ProductFacade(productSchema);
+productFacade
+  .createIfEmpty(productMockData)
+  .catch(console.error);
+
+export default productFacade;
