@@ -1,0 +1,521 @@
+swagger: '2.0'
+info:
+  description: This is a simple API for NodeJS Mentoring
+  version: 1.0.0
+  title: Node MP Simple API
+  contact:
+    email: harley26.gold@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
+tags:
+- name: auth
+  description: Auth endpoint of application
+- name: products
+  description: The main endpoint of products, available after authentication
+- name: cities
+  description: The main endpoint of cities, available after authentication
+- name: users
+  description: The main endpoint of users, available after authentication
+
+paths:
+  /auth:
+    post:
+      tags:
+      - auth
+      summary: Auth and get token
+      operationId: baseAuth
+      description: Auth and get token
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: inventoryItem
+        description: Inventory item to add
+        schema:
+          $ref: '#/definitions/UserForAuth'
+      responses:
+        200:
+          description: Login successful
+          schema:
+              $ref: '#/definitions/AuthResponce'
+        403:
+          description: Forbidden
+  /api/products:
+    get:
+      tags:
+      - products
+      summary: Search all products
+      operationId: allProducts
+      description: |
+        By passing in the appropriate options, you can search for
+        available inventory in the system
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: x-access-token
+        type: string
+        required: true
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+    post:
+      tags:
+      - products
+      summary: Add product and return it
+      operationId: addProduct
+      description: Adds an item to the system
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: x-access-token
+        type: string
+        required: true
+      - in: body
+        name: inventoryItem
+        description: Inventory item to add
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        201:
+          description: item created
+        400:
+          description: invalid input, object invalid
+        409:
+          description: an existing item already exists
+  /api/products/{productId}:
+    get:
+      tags:
+      - products
+      summary: Search simple products
+      operationId: simpleProduct
+      description: Search simple products
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: x-access-token
+        type: string
+        required: true
+      - name: productId
+        in: path
+        description: User ID
+        type: string
+        required: true
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+        400:
+          description: Bad input parameter
+        404:
+          description: Product not found
+    put:
+      tags:
+      - products
+      summary: Edit product
+      operationId: editProduct
+      description: Edit an item to the system
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: productId
+        in: path
+        description: User ID
+        type: integer
+        required: true
+      - in: header
+        name: x-access-token
+        type: string
+        required: true
+      - in: body
+        name: productItem
+        description: Product item to add
+        schema:
+          $ref: '#/definitions/Product'
+      responses:
+        200:
+          description: item modified
+        201:
+          description: item created
+        304:
+          description: not modified
+        400:
+          description: invalid input, object invalid
+        404:
+          description: not found
+    delete:
+      tags:
+      - products
+      summary: Delete simple products
+      operationId: deleteProduct
+      description: Delete simple products
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: x-access-token
+        type: string
+        required: true
+      - name: productId
+        in: path
+        description: User ID
+        type: integer
+        required: true
+      responses:
+        204:
+          description: Product is deleted
+        404:
+          description: Product not found
+  /api/products/{productId}/reviews:
+    get:
+      tags:
+      - products
+      summary: Get all reviews by one product
+      operationId: reviewsByProduct
+      description: Get all reviews by one product
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: x-access-token
+        type: string
+        required: true
+      - name: productId
+        in: path
+        description: Product ID
+        type: integer
+        required: true
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Review'
+        400:
+          description: Bad input parameter
+        404:
+          description: Product not found
+  /api/users:
+    get:
+      tags:
+      - users
+      summary: Search all users
+      operationId: allUsers
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: x-access-token
+        type: string
+        required: true
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+  /api/users/{userId}:
+    delete:
+      tags:
+      - users
+      summary: Delete simple user
+      operationId: deleteUser
+      description: Delete simple user
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: x-access-token
+        type: string
+        required: true
+      - name: userId
+        in: path
+        description: User ID
+        type: integer
+        required: true
+      responses:
+        204:
+          description: User is deleted
+        404:
+          description: User not found
+  /api/cities:
+    get:
+      tags:
+      - cities
+      summary: Search all cities
+      operationId: allCities
+      description: Search all cities
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: x-access-token
+        type: string
+        required: true
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/City'
+    post:
+      tags:
+      - cities
+      summary: Add city and return it
+      operationId: addCity
+      description: Adds an item to the system
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: x-access-token
+        type: string
+        required: true
+      - in: body
+        name: cityItem
+        description: City item to add
+        schema:
+          $ref: '#/definitions/City'
+      responses:
+        201:
+          description: item created
+        400:
+          description: invalid input, object invalid
+        409:
+          description: an existing city already exists
+  /api/cities/{cityId}:
+    get:
+      tags:
+      - cities
+      summary: Search simple city
+      operationId: simpleCity
+      description: Search simple city
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: x-access-token
+        type: string
+        required: true
+      - name: cityId
+        in: path
+        description: City ID
+        type: integer
+        required: true
+      responses:
+        200:
+          description: search results matching criteria
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+        400:
+          description: Bad input parameter
+        404:
+          description: Product not found
+    put:
+      tags:
+      - cities
+      summary: Edit city
+      operationId: editCity
+      description: Edit an item to the system
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: cityId
+        in: path
+        description: City ID
+        type: integer
+        required: true
+      - in: header
+        name: x-access-token
+        type: string
+        required: true
+      - in: body
+        name: cityItem
+        description: City item to edit
+        schema:
+          $ref: '#/definitions/City'
+      responses:
+        200:
+          description: item modified
+        201:
+          description: item created
+        304:
+          description: not modified
+        400:
+          description: invalid input, object invalid
+        404:
+          description: not found
+    delete:
+      tags:
+      - cities
+      summary: Delete simple city
+      operationId: deleteCity
+      description: Delete simple city
+      produces:
+      - application/json
+      parameters:
+      - in: header
+        name: x-access-token
+        type: string
+        required: true
+      - name: cityId
+        in: path
+        description: City ID
+        type: integer
+        required: true
+      responses:
+        204:
+          description: City is deleted
+        404:
+          description: City not found
+definitions:
+  AuthResponce:
+    type: object
+    properties:
+      status:
+        type: number
+        example: 200
+      message:
+        type: string
+        example: OK
+      payload:
+        $ref: '#/definitions/User'
+      token:
+        type: string
+        format: uuid
+        example: |
+          eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc0FjdGl2ZSI6dHJ1ZSwiZmlyc3ROYW1lIjoiR2FtYmxlIiwibGFzdE5hbWUiOiJNdWxsaW5zIiwiaWQiOiJmN2YyYzhhMy0xOTc4LTQwNWUtOTdlYS0xZDkxNzg4ODY4NWMiLCJpYXQiOjE1MTM2ODY4NTksImV4cCI6MTUxMzY4Njk1OX0.qcGSTwumr12P4yqivbyPaB7gPDBnw302lsc34XS8WYM
+  UserForAuth:
+    type: object
+    required: 
+    - id
+    - password
+    properties:
+      id:
+        type: string
+        format: uuid
+        example: f7f2c8a3-1978-405e-97ea-1d917888685c
+      password:
+        type: string
+        example: bumblbee
+  User:
+    type: object
+    required: 
+    - _id
+    properties:
+      _id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      isActive:
+        type: boolean
+        example: true
+      title:
+        type: string
+        example: Employee
+      displayName:
+        type: string
+        example: John Doe
+      firstName:
+        type: string
+        example: John
+      lastName:
+        type: string
+        example: Doe
+      products:
+        type: array
+        items:
+          $ref: '#/definitions/Product'
+  Product:
+    type: object
+    required: 
+    - _id
+    properties:
+      _id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      name:
+        type: string
+        example: Fresh Meat
+      type:
+        type: string
+        example: Meal
+      reviews:
+        type: array
+        items:
+          $ref: '#/definitions/Review'
+  Review:
+    type: object
+    required: 
+    - _id
+    properties:
+      _id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      head:
+        type: string
+        example: Nice choice
+      comment:
+        type: string
+        example: Good purchase
+  City:
+    type: object
+    required: 
+    - _id
+    properties:
+      _id:
+        type: string
+        format: uuid
+        example: d290f1ee-6c54-4b01-90e6-d701748f0851
+      name:
+        type: string
+        example: Minsk
+      country:
+        type: string
+        example: Belarus
+      capital:
+        type: boolean
+        example: true
+      location:
+        $ref: '#/definitions/Location'
+  Location:
+    type: object
+    properties:
+      lat:
+        type: number
+        example: 25.147
+      long:
+        type: number
+        example: 50.125
+host: localhost:3000
+basePath: /
+schemes:
+ - http
