@@ -33,9 +33,8 @@ const basicSetup = (app) => {
 
 export function setupBasicSecurity(app) {
   basicSetup(app);
-  // Auth
   app.post('/auth', function (req, res) {
-    User.findOne({ id: req.body.id })
+    User.findOne({ _id: req.body.id })
       .then(findUser => checkUser(req.body.password, findUser))
       .then((user) => {
         const payload = getPayload(user);
