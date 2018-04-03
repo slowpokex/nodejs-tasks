@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import { genSalt, hash, compare } from 'bcrypt';
 import { promisify } from 'util';
-import '../product/schema';
 
 const genSaltAsync = promisify(genSalt);
 const hashAsync = promisify(hash);
@@ -9,44 +8,39 @@ const compareAsync = promisify(compare);
 
 const SALT_WORK_FACTOR = 10;
 
-const userSchema = new mongoose.Schema({
+const schema = new mongoose.Schema({
   _id: {
-    type: String,
+    type: Number,
     required: true,
   },
-  isActive: {
-    type: Boolean,
-    required: false,
-    default: false,
-  },
-  title: {
+  login: {
     type: String,
-    default: 'Employee',
+    required: true,
+    unique: true,
+    minlength: 6,
+    maxlength: 128,
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 6,
   },
   displayName: {
     type: String,
     default: 'Anonymous',
   },
-  lastName: {
+  email: {
     type: String,
-    default: 'Anonymous',
   },
-  firstName: {
+  role: {
     type: String,
-    default: 'Anonymous',
+    enum: ['GUEST', 'USER', 'MODERATOR', 'ADMIN'],
+    default: 'GUEST',
   },
-  password: {
-    type: String,
-    minlength: 4,
-  },
-  products: [{
-    type: String,
-    ref: 'Product',
-  }],
   lastModifiedDate: Date,
 });
 
-userSchema.pre('save', function (next) {
+schema.pre('save', function (next) {
   const user = this;
   user.lastModifiedDate = new Date();
   if (!user.isModified('password')) {
@@ -60,10 +54,10 @@ userSchema.pre('save', function (next) {
     }).catch(err => next(err));
 });
 
-userSchema.methods.comparePassword = function (candidatePassword, cb) {
+schema.methods.comparePassword = function (candidatePassword, cb) {
   return compareAsync(candidatePassword, this.password)
     .then(isMatch => cb(null, isMatch))
     .catch(err => cb(err));
 };
 
-export default mongoose.model('User', userSchema);
+export default schema;

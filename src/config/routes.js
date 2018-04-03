@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
-import userRouter from './models/user/router';
-import productRouter from './models/product/router';
-import reviewRouter from './models/review/router';
-import citiesRouter from './models/city/router';
+import userRouter from '../models/user/router';
+import productRouter from '../models/product/router';
+import reviewRouter from '../models/review/router';
+import citiesRouter from '../models/city/router';
 
 const router = new Router();
 

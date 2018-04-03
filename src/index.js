@@ -1,10 +1,13 @@
-import 'babel-register';
 import 'babel-polyfill';
+import mongoose from 'mongoose';
 
-import app from './app';
-import config from './config/express-config';
+import app from './config/app';
+import config from './config/config';
 
-const PORT = config.server.port;
+mongoose.Promise = Promise;
+mongoose.connect(config.mongo.url, {
+  useMongoClient: true,
+});
 
 // Hometask 1: NodeJS Modules. NPM
 // import './hometasks/modules';
@@ -18,5 +21,6 @@ const PORT = config.server.port;
 
 // Hometask 4: Http Servers & Middleware && Hometask 7: Simple Mongo Server
 // import './http-servers';
-app.listen(PORT, () => console.log(`App listening on port ${PORT}!`));
+app.listen(config.server.port, () => console.log(`App listening on port ${config.server.port}!`));
 
+export default app;

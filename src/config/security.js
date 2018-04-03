@@ -2,6 +2,7 @@ import { sign } from 'jsonwebtoken';
 import helmet from 'helmet';
 import lodash from 'lodash';
 import session from 'express-session';
+import flash from 'connect-flash';
 
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
@@ -9,15 +10,23 @@ import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { Strategy as TwitterStrategy } from 'passport-twitter';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 
-import User from './models/user/schema';
-import accessControlHeaders from './middlewares/security/access-control-headers';
-import config from './config/express-config';
+import User from '../models/user/schema';
+import UserFacade from '../models/user/facade';
+
+import accessControlHeaders from '../middlewares/security/access-control-headers';
+import config from './config';
 
 const checkUser = (password, userFromDb) => new Promise((resolve, reject) => {
+  if (!userFromDb) {
+    return reject({ noUser: true });
+  }
   const wrappedUser = new User(userFromDb);
   wrappedUser.comparePassword(password, (err, isMatch) => {
-    if (err || !isMatch) {
-      return reject(err, isMatch);
+    if (!isMatch) {
+      return reject({ notMatch: true });
+    }
+    if (err) {
+      return reject(err);
     }
     return resolve(userFromDb);
   });
@@ -124,30 +133,35 @@ function initGoogleAuth(pass) {
 
 export function setupPassportSecurity(app) {
   basicSetup(app);
-  app.use(session({ secret: config.server.security.secret }));
 
-  // Init passport
+  app.use(session({
+    secret: config.server.security.secret,
+    saveUninitialized: true, // saved new sessions
+    resave: false, // do not automatically write to the session store
+    cookie: { httpOnly: true, maxAge: 2419200000 },
+  }));
+
   passport.use(new LocalStrategy({
-    usernameField: 'id',
+    usernameField: 'login',
     passwordField: 'password',
     session: false,
-  }, (id, password, done) => {
-    User.findOne({ id })
+    passReqToCallback: true,
+  }, (req, login, password, done) => {
+    UserFacade.findOne({ login })
       .then(user => checkUser(password, user))
       .then((user) => {
         done(null, user);
       })
-      .catch(done);
+      .catch((err) => {
+        if (err.noUser) {
+          return done(null, false, { message: 'Invalid user ID' });
+        }
+        if (err.notMatch) {
+          return done(null, false, { message: 'Oops! Wrong password.' });
+        }
+        done(err);
+      });
   }));
-
-  passport.serializeUser((user, done) => done(null, user.id));
-  passport.deserializeUser((id, done) => {
-    User.findOne({ id })
-      .then((user) => {
-        done(null, user);
-      })
-      .catch(done);
-  });
 
   initFacebookAuth(passport);
   initTwitterAuth(passport);
@@ -155,13 +169,53 @@ export function setupPassportSecurity(app) {
 
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(flash());
 
-  app.post('/auth/local',
-    passport.authenticate('local', {
-      successRedirect: '/v2/api',
-      failureRedirect: '/auth/local',
-      failureFlash: true,
-    }));
+  passport.serializeUser((user, done) => done(null, user._id));
+  passport.deserializeUser((id, done) => {
+    User.findById(id)
+      .then((user) => {
+        done(null, user);
+      })
+      .catch(done);
+  });
+
+
+  app.post('/login', (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+      if (err) return next(err);
+      if (!user) {
+        return res.json({ success: false, message: info.message });
+      }
+
+      req.logIn(user, (loginErr) => {
+        if (loginErr) {
+          return res.json({ success: false, message: loginErr });
+        }
+        return res.json({ success: true, message: 'authentication succeeded' });
+      });
+    })(req, res, next);
+  });
+
+  app.get('/logout', (req, res) => {
+    req.logout();
+    return res.json({ success: true });
+  });
+
+  app.post('/register', (req, res) => {
+    UserFacade.findOne({ login: req.body.login })
+      .then((user) => {
+        if (user) {
+          return res.json({ success: false, message: 'Login already in use' });
+        }
+        return UserFacade.create(req.body);
+      })
+      .then(() => res.json({ success: true }))
+      .catch((err) => {
+        console.error(err);
+        return res.json({ success: false });
+      });
+  });
 
   app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
   app.get('/auth/facebook/callback', passport.authenticate('facebook',
@@ -178,9 +232,4 @@ export function setupPassportSecurity(app) {
     passport.authenticate('google', {
       successRedirect: '/v2/api',
       failureRedirect: '/login' }));
-
-  app.get('/logout', (req, res) => {
-    req.logout();
-    res.redirect('/');
-  });
 }
