@@ -2,16 +2,18 @@ import express from 'express';
 import expressValidation from 'express-validation';
 import morgan from 'morgan';
 import path from 'path';
+import helmet from 'helmet';
+import compress from 'compression';
+import bodyParser from 'body-parser';
 import httpStatus from 'http-status';
 
 // Run security endpoints
-import { setupBasicSecurity, setupPassportSecurity } from './security';
+import security from './security';
 
 import APIError from '../bin/api-error';
 import checkToken from '../middlewares/security/check-token';
 import cookieParser from '../middlewares/cookie-parser';
 import queryParser from '../middlewares/query-parser';
-import mustAuth from '../middlewares/security/must-auth';
 import router from './routes';
 import config from './config';
 
@@ -19,18 +21,18 @@ const app = express();
 
 app.use(cookieParser);
 app.use(queryParser);
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(morgan('tiny'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(helmet());
+app.use(compress());
 
-setupBasicSecurity(app); // and add 'checkToken' for verifying session
-setupPassportSecurity(app);
+if (config.env !== 'test') {
+  app.use(morgan('tiny'));
+}
 
+security(app); // and add 'checkToken' for verifying session
 app.use('/static', express.static(path.join(__dirname, 'static')));
-
 app.use('/api', checkToken, router);
-app.use('/v2/api', mustAuth, router);
-
 
 /**
  *  Error handling for our application

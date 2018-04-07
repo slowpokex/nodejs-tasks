@@ -1,5 +1,7 @@
 import lodash from 'lodash';
 
+const generateId = () => lodash.random(Number.MAX_SAFE_INTEGER);
+
 export default class Facade {
   constructor(Schema) {
     this.Schema = Schema;
@@ -11,7 +13,10 @@ export default class Facade {
    * @returns {Promise}
    */
   create(body) {
-    const schema = new this.Schema(body);
+    const schema = new this.Schema({
+      _id: generateId(),
+      ...lodash.omit(body, '_id'),
+    });
     return schema.save();
   }
 

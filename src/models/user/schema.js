@@ -35,7 +35,7 @@ const schema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['GUEST', 'USER', 'MODERATOR', 'ADMIN'],
-    default: 'GUEST',
+    default: 'USER',
   },
   lastModifiedDate: Date,
 });
@@ -60,4 +60,4 @@ schema.methods.comparePassword = function (candidatePassword, cb) {
     .catch(err => cb(err));
 };
 
-export default schema;
+export default mongoose.model('User', schema);

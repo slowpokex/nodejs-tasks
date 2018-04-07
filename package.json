@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "init.js",
   "scripts": {
-    "lint": "standard ./src --fix",
     "test": "npm run test:unit && npm run test:int",
     "test:unit": "npm run mocha ./test/**/*.unit.js",
     "test:int": "npm run mocha ./test/**/*.int.js",
@@ -24,7 +23,9 @@
     "babel-loader": "^7.1.2",
     "babel-polyfill": "^6.26.0",
     "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
     "chai": "^4.1.2",
+    "compression": "^1.7.2",
     "connect-flash": "^0.1.1",
     "csv-parse": "^1.2.3",
     "dotenv": "^5.0.1",
@@ -40,13 +41,6 @@
     "mongodb": "^2.2.33",
     "mongoose": "^4.12.5",
     "morgan": "^1.9.0",
-    "passport": "^0.4.0",
-    "passport-facebook": "^2.1.1",
-    "passport-google-oauth2": "^0.1.6",
-    "passport-google-oauth20": "^1.0.0",
-    "passport-http-bearer": "^1.0.1",
-    "passport-local": "^1.0.0",
-    "passport-twitter": "^1.0.4",
     "request": "^2.83.0",
     "split2": "^2.2.0",
     "supertest-as-promised": "^4.0.2",
@@ -68,7 +62,6 @@
     "mocha": "^5.0.5",
     "nodemon": "^1.12.0",
     "nyc": "^11.6.0",
-    "standart": "^6.1.0",
     "supertest": "^3.0.0"
   }
 }
