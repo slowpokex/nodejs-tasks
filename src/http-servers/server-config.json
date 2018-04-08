@@ -1,5 +1,0 @@
-{
-  "SERVER_PORT" : 3000,
-  "HTML_FILE" : "./src/http-servers/html-server/index.html",
-  "REPLACE_TAG" : "{message}"
-}
