@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">41.67% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>5/12</span>
+        <span class='fraction'>6/12</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -37,14 +37,14 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">50% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>5/10</span>
+        <span class='fraction'>6/12</span>
       </div>
     </div>
     <p class="quiet">
       Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
     </p>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line medium'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -57,35 +57,56 @@
 <a name='L9'></a><a href='#L9'>9</a>
 <a name='L10'></a><a href='#L10'>10</a>
 <a name='L11'></a><a href='#L11'>11</a>
-<a name='L12'></a><a href='#L12'>12</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">0</span>
-<span class="cline-any cline-no">0</span>
-<span class="cline-any cline-no">0</span>
-<span class="cline-any cline-no">0</span>
-<span class="cline-any cline-no">0</span>
-<span class="cline-any cline-no">0</span>
-<span class="cline-any cline-no">0</span>
-<span class="cline-any cline-no">0</span>
-<span class="cline-any cline-no">0</span>
-<span class="cline-any cline-no">0</span>
-<span class="cline-any cline-no">0</span>
-<span class="cline-any cline-no">0</span></td><td class="text"><pre class="prettyprint lang-js">Cannot read property 'start' of undefined
-TypeError: Cannot read property 'start' of undefined
-    at /home/harley26/my-projects/node_app/node_modules/nyc/node_modules/istanbul-reports/lib/html/annotator.js:50:29
-    at Array.forEach (<anonymous>)
-    at annotateStatements (/home/harley26/my-projects/node_app/node_modules/nyc/node_modules/istanbul-reports/lib/html/annotator.js:46:33)
-    at Object.annotateSourceCode (/home/harley26/my-projects/node_app/node_modules/nyc/node_modules/istanbul-reports/lib/html/annotator.js:190:9)
-    at HtmlReport.onDetail (/home/harley26/my-projects/node_app/node_modules/nyc/node_modules/istanbul-reports/lib/html/index.js:237:39)
-    at Visitor.(anonymous function) [as onDetail] (/home/harley26/my-projects/node_app/node_modules/nyc/node_modules/istanbul-lib-report/lib/tree.js:34:30)
-    at ReportNode.Node.visit (/home/harley26/my-projects/node_app/node_modules/nyc/node_modules/istanbul-lib-report/lib/tree.js:123:17)
-    at /home/harley26/my-projects/node_app/node_modules/nyc/node_modules/istanbul-lib-report/lib/tree.js:116:23
-    at Array.forEach (<anonymous>)
-    at visitChildren (/home/harley26/my-projects/node_app/node_modules/nyc/node_modules/istanbul-lib-report/lib/tree.js:115:32)</pre></td></tr>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Router } from 'express';
+import controller from './controller';
+&nbsp;
+const router = new Router();
+&nbsp;
+router.route('/')
+  .get(<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(...args) =&gt; controller.find(...args))</span></span>
+  .post(<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(...args) =&gt; controller.create(...args));</span></span>
+&nbsp;
+router.route('/:id')
+  .put(<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(...args) =&gt; controller.update(...args))</span></span>
+  .get(<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(...args) =&gt; controller.findById(...args))</span></span>
+  .delete(<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(...args) =&gt; controller.remove(...args));</span></span>
+&nbsp;
+router.route('/:id/reviews')
+  .get(<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(...args) =&gt; controller.getAllProducts(...args));</span></span>
+&nbsp;
+export default router;
+&nbsp;</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Apr 08 2018 21:56:03 GMT+0300 (+03)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Apr 10 2018 00:37:48 GMT+0300 (+03)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

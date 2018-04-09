@@ -5,11 +5,13 @@ import faker from 'faker';
 import { verify } from 'jsonwebtoken';
 import { promisify } from 'util';
 
-import app from '../src';
-import config from '../src/config/config';
+import app from '../../src';
+import config from '../../src/config/config';
 
 chai.config.includeStack = true;
 
+/* eslint no-unused-expressions: "off" */
+/* eslint no-undef: "off" */
 describe('## Overall tests', () => {
   describe('# GET /404', () => {
     it('should return 404 status', (done) => {
