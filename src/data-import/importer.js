@@ -13,7 +13,8 @@ const asyncParser = promisify(parse);
  * @author Mikita Isakau
  */
 export default class Importer {
-  /** 
+
+  /**
    * Load from csv-file
    * @param {string} file : path to file
    * @return {Promise} : the data from csv-file, wrapped by Promise
@@ -23,7 +24,7 @@ export default class Importer {
       .then(rawData => asyncParser(rawData, { columns: true }));
   }
 
-  /** 
+  /**
    * Handler for dir-watcher:register event
    * @param event : file, which came from event, which will be added to map
    */
@@ -35,9 +36,9 @@ export default class Importer {
       });
   }
 
-  /** 
+  /**
    * Handler for dir-watcher:changed event
-   * @param event : changed file, which came from event 
+   * @param event : changed file, which came from event
    */
   change(event) {
     const { file } = event;
@@ -50,7 +51,7 @@ export default class Importer {
       });
   }
 
-  /** 
+  /**
    * Handler for dir-watcher:unregister event
    * @param event : file, which came from event, which will be deleted from map
    */
@@ -77,7 +78,7 @@ export default class Importer {
   /**
    * Asyncronous getting imported data
    * @param {string} path - path for file
-   * @return {Promise} with imported data 
+   * @return {Promise} with imported data
    */
   import(path) {
     return Promise.resolve(this.dataMap.get(path));
@@ -86,7 +87,7 @@ export default class Importer {
   /**
    * Syncronous getting imported data
    * @param {string} path - path for file
-   * @return {Object} with imported data 
+   * @return {Object} with imported data
    */
   importSync(path) {
     return this.dataMap.get(path);

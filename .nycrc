@@ -1,0 +1,29 @@
+{
+  "extension": [
+    ".js"
+  ],
+  "include": [
+    "src/**/*.js"
+  ],
+  "exclude": [
+    "test/**/*.*",
+    "src/**/*.unit.js",
+    "src/**/*.int.js",
+    "dist/**/*.*"
+  ],
+  "reporter": [
+    "text",
+    "html"
+  ],
+  "report-dir": "./coverage",
+  "check-coverage": true,
+  "per-file": true,
+  "lines": 99,
+  "statements": 99,
+  "functions": 99,
+  "branches": 99,
+  "sourceMap": true,
+  "cache": false,
+  "all": true,
+  "instrument": true
+}

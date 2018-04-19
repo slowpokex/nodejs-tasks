@@ -1,55 +1,86 @@
+import httpStatus from 'http-status';
+
 export default class Controller {
   constructor(facade) {
     this.facade = facade;
   }
 
-  create(req, res, next) {
-    this.facade.create(req.body)
-      .then(doc => res.status(201).json(doc))
-      .catch(err => next(err));
+  async create(req, res, next) {
+    try {
+      return res
+        .status(httpStatus.CREATED)
+        .json(await this.facade.create(req.body));
+    } catch (err) {
+      return next(err);
+    }
   }
 
-  find(req, res, next) {
-    this.facade.find(req.query)
-      .then(collection => res.json(collection))
-      .catch(err => next(err));
+  async find(req, res, next) {
+    try {
+      return res
+        .status(httpStatus.OK)
+        .json(await this.facade.find(req.query));
+    } catch (err) {
+      return next(err);
+    }
   }
 
-  findOne(req, res, next) {
-    this.facade.findOne(req.query)
-      .then(doc => res.json(doc))
-      .catch(err => next(err));
+  async findOne(req, res, next) {
+    try {
+      return res
+        .status(httpStatus.OK)
+        .json(await this.facade.findOne(req.query));
+    } catch (err) {
+      return next(err);
+    }
   }
 
-  findById(req, res, next) {
-    this.facade.findById(req.params.id)
-      .then((doc) => {
-        if (!doc) res.sendStatus(404);
-        res.json(doc);
-      })
-      .catch(err => next(err));
+  async findById(req, res, next) {
+    try {
+      const data = await this.facade.findById(req.params.id);
+      if (!data) {
+        return res.sendStatus(httpStatus.NOT_FOUND);
+      }
+      return res
+        .status(httpStatus.OK)
+        .json(data);
+    } catch (err) {
+      return next(err);
+    }
   }
 
-  update(req, res, next) {
-    this.facade.update({ _id: req.params.id }, req.body)
-      .then((results) => {
-        if (results.n < 1) {
-          return this.create(req.body);
-        }
-        if (results.nModified < 1) {
-          return res.sendStatus(304);
-        }
-        return res.json(results);
-      })
-      .catch(err => next(err));
+  async update(req, res, next) {
+    try {
+      const results = await this.facade.update({
+        _id: req.params.id,
+      }, req.body);
+      if (results.n < 1) {
+        return res.sendStatus(httpStatus.NOT_FOUND);
+      }
+      if (results.nModified < 1) {
+        return res.sendStatus(httpStatus.NOT_MODIFIED);
+      }
+      const data = await this.facade.findById(req.params.id);
+      if (!data) {
+        return res.sendStatus(httpStatus.NOT_FOUND);
+      }
+      return res.status(httpStatus.OK).json(data);
+    } catch (err) {
+      return next(err);
+    }
   }
 
-  remove(req, res, next) {
-    this.facade.remove({ _id: req.params.id })
-      .then((doc) => {
-        if (!doc) res.sendStatus(404);
-        res.status(204).json(doc);
-      })
-      .catch(err => next(err));
+  async remove(req, res, next) {
+    try {
+      const data = await this.facade.remove({
+        _id: req.params.id,
+      });
+      if (!data) {
+        return res.sendStatus(httpStatus.NOT_FOUND);
+      }
+      return res.sendStatus(httpStatus.NO_CONTENT);
+    } catch (err) {
+      return next(err);
+    }
   }
 }

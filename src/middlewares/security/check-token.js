@@ -1,6 +1,6 @@
 import { verify } from 'jsonwebtoken';
 import { promisify } from 'util';
-import config from '../../config/express-config';
+import config from '../../config/config';
 
 const verifyAsync = promisify(verify);
 
